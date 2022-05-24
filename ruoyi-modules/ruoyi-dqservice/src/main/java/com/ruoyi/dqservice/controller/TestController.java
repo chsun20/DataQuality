@@ -1,4 +1,4 @@
-package com.ruoyi.rule.controller;
+package com.ruoyi.dqservice.controller;
 
 import com.ruoyi.common.core.web.controller.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +10,7 @@ public class TestController extends BaseController{
     @RequestMapping("/test")
     public String test()
     {
-        return "rule模块";
+        return "dq模块";
     }
 
 }
