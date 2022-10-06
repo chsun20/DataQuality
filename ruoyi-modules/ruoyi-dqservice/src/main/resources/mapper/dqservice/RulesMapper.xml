@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.dqservice.mapper.RulesMapper">
+    
+    <resultMap type="Rules" id="RulesResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="url"    column="url"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="del"    column="del"    />
+    </resultMap>
+
+    <sql id="selectRulesVo">
+        select id, user_id, url, create_time, update_time, del from rules
+    </sql>
+
+    <select id="selectRulesList" parameterType="Rules" resultMap="RulesResult">
+        <include refid="selectRulesVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="del != null "> and del = #{del}</if>
+        </where>
+    </select>
+    
+    <select id="selectRulesById" parameterType="Long" resultMap="RulesResult">
+        <include refid="selectRulesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRules" parameterType="Rules">
+        insert into rules
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="url != null">url,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="del != null">del,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="url != null">#{url},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="del != null">#{del},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRules" parameterType="Rules">
+        update rules
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="del != null">del = #{del},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRulesById" parameterType="Long">
+        delete from rules where id = #{id}
+    </delete>
+
+    <delete id="deleteRulesByIds" parameterType="String">
+        delete from rules where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
