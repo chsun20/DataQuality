@@ -8,10 +8,13 @@ public class Order implements java.io.Serializable {
 
     static final long serialVersionUID = 1L;
 
-    @org.kie.api.definition.type.Label(value = "\u8BA2\u5355\u539F\u4EF7\u91D1\u989D")
+    @org.kie.api.definition.type.Label("订单原价金额")
     private java.lang.Integer amout;
-    @org.kie.api.definition.type.Label(value = "\u79EF\u5206")
+    @org.kie.api.definition.type.Label("积分")
     private java.lang.Integer score;
+
+    @org.kie.api.definition.type.Label(value = "\u63CF\u8FF0")
+    private java.lang.String info;
 
     public Order() {
     }
@@ -32,9 +35,19 @@ public class Order implements java.io.Serializable {
         this.score = score;
     }
 
-    public Order(java.lang.Integer amout, java.lang.Integer score) {
+    public java.lang.String getInfo() {
+        return this.info;
+    }
+
+    public void setInfo(java.lang.String info) {
+        this.info = info;
+    }
+
+    public Order(java.lang.Integer amout, java.lang.Integer score,
+                 java.lang.String info) {
         this.amout = amout;
         this.score = score;
+        this.info = info;
     }
 
 }

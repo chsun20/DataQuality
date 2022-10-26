@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class TestDrools {
-    // 实现方式1：在drl文件中使用declare关键词定义类，在后端使用FactType获取drl中定义的类，将一个object对象insert
+public class TestDrools2 {
+    // 实现方式2：在workbench配置javabean，在后端定义与其相同的javabean，再将其insert
     @Test
     public void testWorkbench() throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        String url = "http://localhost:8080/drools-wb/maven2/com/myteam/object-rules/1.0.0/object-rules-1.0.0.jar";
+        String url = "file:///c:\\Users\\TUF\\dockerRepo\\kie\\global\\com\\sch\\order-rules\\1.0.2\\order-rules-1.0.2.jar";
         KieServices kieServices = KieServices.Factory.get();
         UrlResource resource = (UrlResource) kieServices.getResources().newUrlResource(url);
         resource.setBasicAuthentication("enabled");
@@ -40,28 +40,27 @@ public class TestDrools {
         KieModule kieModule = kieRepository.addKieModule(kieServices.getResources().newInputStreamResource(is));
         KieContainer kieContainer = kieServices.newKieContainer(kieModule.getReleaseId());
 
-        KieBase kieBase = kieContainer.getKieBase("myKbase1");
-        FactType factType = kieBase.getFactType("com.myteam.object_rules", "Order");
-        List<Object> list = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
-            Object obj = factType.newInstance();
-            if(i < 6) factType.set(obj, "amount", i);
-            else factType.set(obj, "amount", null);
-            list.add(obj);
-        }
-
         KieSession kieSession = kieContainer.newKieSession();
 
-        int total = list.size();
-
+        List<Order> list = new ArrayList<>();
+        for(int i = 0; i < 1000000; i++) {
+            Order order = new Order();
+            order.setInfo("aaaaaaaaaaaab");
+            list.add(order);
+        }
+        int count = 0;
+        kieSession.setGlobal("count", count);
         kieSession.insert(list);
 
+        int ruleFiredCount = 0;
+
         long pre = System.currentTimeMillis();
-        int ruleFiredCount = kieSession.fireAllRules();
+//        for(int i = 0; i < 1000000; i++)
+            ruleFiredCount += kieSession.fireAllRules();
         System.out.println("drools cost " + (System.currentTimeMillis() - pre) + "ms");
         System.out.println("触发了" + ruleFiredCount + "条规则");
-        System.out.println("共有" + total + "条数据");
-//        System.out.println("订单提交之后积分：" + factType.get(obj, "score"));
+        System.out.println("触发了" + count + "条规则2");
+//        System.out.println("订单提交之后积分：" + order.getScore());
         kieSession.dispose();
     }
 }

@@ -1,8 +1,9 @@
 package com.ruoyi.dqservice.controller;
 
 import java.util.List;
-import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.dqservice.dto.DroolsRule2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
-import com.ruoyi.dqservice.domain.Rules;
-import com.ruoyi.dqservice.service.IRulesService;
+import com.ruoyi.dqservice.domain.Rule;
+import com.ruoyi.dqservice.service.IRuleService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
@@ -24,26 +25,26 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
 
 /**
  * 规则Controller
- * 
+ *
  * @author ruoyi
- * @date 2022-10-06
+ * @date 2022-10-26
  */
 @RestController
 @RequestMapping("/rule")
-public class RulesController extends BaseController
+public class RuleController extends BaseController
 {
     @Autowired
-    private IRulesService rulesService;
+    private IRuleService ruleService;
 
     /**
      * 查询规则列表
      */
     @RequiresPermissions("dqservice:rule:list")
     @GetMapping("/list")
-    public TableDataInfo list(Rules rules)
+    public TableDataInfo list(Rule rule)
     {
         startPage();
-        List<Rules> list = rulesService.selectRulesList(rules);
+        List<Rule> list = ruleService.selectRuleList(rule);
         return getDataTable(list);
     }
 
@@ -53,10 +54,10 @@ public class RulesController extends BaseController
     @RequiresPermissions("dqservice:rule:export")
     @Log(title = "规则", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Rules rules)
+    public void export(HttpServletResponse response, Rule rule)
     {
-        List<Rules> list = rulesService.selectRulesList(rules);
-        ExcelUtil<Rules> util = new ExcelUtil<Rules>(Rules.class);
+        List<Rule> list = ruleService.selectRuleList(rule);
+        ExcelUtil<Rule> util = new ExcelUtil<Rule>(Rule.class);
         util.exportExcel(response, list, "规则数据");
     }
 
@@ -64,10 +65,10 @@ public class RulesController extends BaseController
      * 获取规则详细信息
      */
     @RequiresPermissions("dqservice:rule:query")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    @GetMapping(value = "/{ruleId}")
+    public AjaxResult getInfo(@PathVariable("ruleId") Long ruleId)
     {
-        return AjaxResult.success(rulesService.selectRulesById(id));
+        return AjaxResult.success(ruleService.selectRuleByRuleId(ruleId));
     }
 
     /**
@@ -76,9 +77,10 @@ public class RulesController extends BaseController
     @RequiresPermissions("dqservice:rule:add")
     @Log(title = "规则", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Rules rules)
+    public AjaxResult add(@RequestBody DroolsRule2 droolsRule2)
     {
-        return toAjax(rulesService.insertRules(rules));
+        Rule rule = new Rule(droolsRule2);
+        return toAjax(ruleService.insertRule(rule));
     }
 
     /**
@@ -87,9 +89,9 @@ public class RulesController extends BaseController
     @RequiresPermissions("dqservice:rule:edit")
     @Log(title = "规则", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Rules rules)
+    public AjaxResult edit(@RequestBody Rule rule)
     {
-        return toAjax(rulesService.updateRules(rules));
+        return toAjax(ruleService.updateRule(rule));
     }
 
     /**
@@ -97,9 +99,9 @@ public class RulesController extends BaseController
      */
     @RequiresPermissions("dqservice:rule:remove")
     @Log(title = "规则", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{ruleIds}")
+    public AjaxResult remove(@PathVariable Long[] ruleIds)
     {
-        return toAjax(rulesService.deleteRulesByIds(ids));
+        return toAjax(ruleService.deleteRuleByRuleIds(ruleIds));
     }
 }
