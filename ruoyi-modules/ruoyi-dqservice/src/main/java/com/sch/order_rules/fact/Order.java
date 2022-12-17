@@ -13,8 +13,10 @@ public class Order implements java.io.Serializable {
     @org.kie.api.definition.type.Label("积分")
     private java.lang.Integer score;
 
-    @org.kie.api.definition.type.Label(value = "\u63CF\u8FF0")
+    @org.kie.api.definition.type.Label("描述")
     private java.lang.String info;
+
+    private java.lang.String type;
 
     public Order() {
     }
@@ -43,11 +45,20 @@ public class Order implements java.io.Serializable {
         this.info = info;
     }
 
+    public java.lang.String getType() {
+        return this.type;
+    }
+
+    public void setType(java.lang.String type) {
+        this.type = type;
+    }
+
     public Order(java.lang.Integer amout, java.lang.Integer score,
-                 java.lang.String info) {
+                 java.lang.String info, java.lang.String type) {
         this.amout = amout;
         this.score = score;
         this.info = info;
+        this.type = type;
     }
 
 }

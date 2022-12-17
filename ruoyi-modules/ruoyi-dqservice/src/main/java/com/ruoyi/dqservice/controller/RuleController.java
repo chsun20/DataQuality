@@ -3,7 +3,9 @@ package com.ruoyi.dqservice.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.dqservice.dto.DroolsRule2;
+import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.dqservice.domain.DroolsRule;
+import com.ruoyi.dqservice.util.RuleParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,9 +79,10 @@ public class RuleController extends BaseController
     @RequiresPermissions("dqservice:rule:add")
     @Log(title = "规则", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody DroolsRule2 droolsRule2)
+    public AjaxResult add(@RequestBody Rule rule)
     {
-        Rule rule = new Rule(droolsRule2);
+        rule.setUserId(SecurityUtils.getUserId());
+        RuleParser.nullCountParser(rule);
         return toAjax(ruleService.insertRule(rule));
     }
 

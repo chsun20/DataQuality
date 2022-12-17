@@ -26,7 +26,6 @@ public class DroolsRuleServiceImpl implements DroolsRuleService {
     @Override
     public void addDroolsRule(DroolsRule droolsRule) {
         droolsRule.validate();
-        droolsRule.setCreateTime(new Date());
         droolsRuleMap.put(droolsRule.getRuleId(), droolsRule);
         droolsManager.addOrUpdateRule(droolsRule);
     }
@@ -34,7 +33,6 @@ public class DroolsRuleServiceImpl implements DroolsRuleService {
     @Override
     public void updateDroolsRule(DroolsRule droolsRule) {
         droolsRule.validate();
-        droolsRule.setUpdateTime(new Date());
         droolsRuleMap.put(droolsRule.getRuleId(), droolsRule);
         droolsManager.addOrUpdateRule(droolsRule);
     }
